@@ -1,3 +1,5 @@
+from hashlib import sha256
+
 from .models import User
 from .db import DB
 
@@ -31,6 +33,22 @@ class UserService:
 
     def get_user_by_id(self, id: str) -> User | None:
         pass
+
+    def authenticate(self, username: str, password: str) -> User | None:
+        user_data = db.get_user_by_username(username)
+
+        if user_data is None:
+            return None
+        else:
+            if user_data['password'] != str(sha256(password.encode()).hexdigest()):
+                return None
+            else:
+                return User(
+                    username=user_data['username'],
+                    password=user_data['password'],
+                    first_name=user_data['first_name'],
+                    last_name=user_data['last_name']
+                )
 
 
 class CartService:

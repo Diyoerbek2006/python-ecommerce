@@ -59,15 +59,17 @@ class CLI:
                 cprint('Yaroqli password kiriting!', 'red')
                 errors += 1
 
+            user = self.user_service.authenticate(username, password)
+            if user is None:
+                cprint('Bunday user mavjud emas!', 'red')
+                errors += 1
+
             if errors > 0:
                 continue
             else:
                 cprint("Siz muvaffaqiyatli tizimga kirdingiz!", "green")
+                self.current_user = user
 
-                self.current_user = {
-                    "username": username,
-                    "password": password,
-                }
                 return True
 
     def register(self) -> None:
