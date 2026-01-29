@@ -19,25 +19,47 @@ class CLI:
     
     def run(self) -> None:
         while True:
-            self.print_main_menu()
+            if not self.current_user:
+                self.print_main_menu()
 
-            choice = input(colored('> ', 'yellow'))
-            if choice == '1':
-                self.show_products()
-            elif choice == '2':
-                self.login()
-            elif choice == '3':
-                self.register()
-            elif choice == '0':
-                self.quit()
+                choice = input(colored('> ', 'yellow'))
+                if choice == '1':
+                    self.show_products()
+                elif choice == '2':
+                    self.login()
+                elif choice == '3':
+                    self.register()
+                elif choice == '0':
+                    self.quit()
+                else:
+                    cprint('Bunday menu mavjud emas!', 'red')
             else:
-                cprint('Bunday menu mavjud emas!', 'red')
+                self.print_user_manu()
+
+                choice = input(colored('> ', 'yellow'))
+                if choice == '1':
+                    self.show_products()
+                elif choice == '2':
+                    self.logout()
+                elif choice == '0':
+                    self.quit()
+                else:
+                    cprint('Bunday menu mavjud emas!', 'red')
+
+    def logout(self):
+        self.current_user = None
 
     def print_main_menu(self) -> None:
         print('----------------------Main Menu----------------------')
         print('1. Products')
         print('2. Login')
         print('3. Register')
+        print('0. Quit')
+
+    def print_user_manu(self) -> None:
+        print('----------------------User Menu----------------------')
+        print('1. Products')
+        print('2. Logout')
         print('0. Quit')
 
     def show_products(self) -> None:

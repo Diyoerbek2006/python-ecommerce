@@ -6,6 +6,13 @@
             "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
             "first_name": "Vali",
             "last_name": "Aliyev"
+        },
+        {
+            "id": "e5911363-f4a7-4f0f-b3ab-c682c85162b9",
+            "username": "alijon",
+            "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+            "first_name": "Ali",
+            "last_name": "Valiyev"
         }
     ],
     "carts": [],
