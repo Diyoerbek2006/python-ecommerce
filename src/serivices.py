@@ -57,6 +57,11 @@ class ProductService:
 
     def get_products(self) -> list[dict]:
         return db.get_product_list()
+    
+    def get_product_by_id(self, product_id: int) -> dict | None:
+        for product in self.get_products():
+            if product['id'] == product_id:
+                return product
 
 
 class CartService:

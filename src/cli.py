@@ -68,10 +68,50 @@ class CLI:
         products = self.product_service.get_products()
 
         if products:
-            for n, product in enumerate(products, start=1):
-                print(f"{n}. {product['name']}")
+            for product in products:
+                print(f"{product['id']}. {product['name']}")
+
+            self.search_product()
         else:
             print(colored('Hozirda birorta ham mahsulot mavjud emas!', 'yellow'))
+
+    def search_product(self):
+        self.print_product_detail_menu()
+
+        choice = input(colored('> ', 'yellow'))
+        if choice == '1':
+            self.show_product_detail_by_id()
+        elif choice == '2':
+            self.search_products_by_name()
+        elif choice == '0':
+            return None
+        
+    def show_product_detail_by_id(self):
+        product_id = int(input('Product ID: '))
+
+        product = self.product_service.get_product_by_id(product_id)
+
+        if product:
+            self.print_product_detail(product)
+        else:
+            print(colored('Bunday ID ga ega product mavjud emas!', 'yellow'))
+
+    def print_product_detail(self, product):
+        print('Porudct haqida malumotlar')
+        print(f'Nomi: {product["name"]}')
+        print(f'Tavsif: {product["description"]}')
+        print(f'Narxi: {product["price"]}')
+        print(f'Chegirma foizi: {product["sale"]}')
+        print(f'Soni: {product["stock"]}')
+
+    def search_products_by_name(self):
+        pass
+
+    def print_product_detail_menu(self):
+        print('Productni qidirish uchun qaysi usulni tanlaysiz?')
+        print('1. Product IDsi boyicha')
+        print('2. Product name boyicha')
+        print('0. Bosh sahifaga qaytish')
 
     def login(self) -> None:
         while True:
