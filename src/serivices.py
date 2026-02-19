@@ -73,8 +73,113 @@ class ProductService:
 
 
 class CartService:
-    pass
+    def __init__(self):
+        self.cart = self.load_cart()
+
+    def load_cart(self):
+        try:
+            with open(DB_FILE, "r") as f:
+                data = json.load(f)
+                return data.get("cart", {})
+        except Exception:
+            return {}
+
+    def save_cart(self):
+        try:
+            with open(DB_FILE, "r+") as f:
+                data = json.load(f)
+                data["cart"] = self.cart
+                f.seek(0)
+                json.dump(data, f, indent=4)
+                f.truncate()
+        except Exception:
+            pass
+
+    def add_to_cart(self, product_id, quantity=1):
+        """ Savatga maxsulot qo'shish """
+        if str(product_id) in self.cart:
+            self.cart[str(product_id)] += quantity
+        else:
+            self.cart[str(product_id)] = quantity
+
+        self.save_cart()
+        return self.cart
+
+    def remove_from_cart(self, product_id):
+        """ Savatdan mahsulotni o'chirish """
+        if str(product_id) in self.cart:
+            del self.cart[str(product_id)]
+            self.save_cart()
+        return self.cart
+
+    def clear_cart(self):
+        """ Savatni bo'shatish """
+        self.cart = {}
+        self.save_cart()
+        return self.cart
+
+    def get_cart_items(self):
+        """ Hozirgi savat """
+        return self.cart
 
 
 class OrderService:
-    pass
+    def __init__(self):
+        self.orders = self.load_orders()
+
+    def load_orders(self):
+        try:
+            with open(DB_FILE, "r") as f:
+                data = json.load(f)
+                return data.get("orders", [])
+        except Exception:
+            return []
+
+    def save_orders(self):
+        try:
+            with open(DB_FILE, "r+") as f:
+                data = json.load(f)
+                data["orders"] = self.orders
+                f.seek(0)
+                json.dump(data, f, indent=4)
+                f.truncate()
+        except Exception:
+            pass
+
+    def create_order(self, customer_id, cart_items):
+        """
+        Buyurtma yaratish:
+        - customer_id: mijoz identifikatori
+        - cart_items: savatdagi mahsulotlar dict
+        """
+        order_id = len(self.orders) + 1
+        new_order = {
+            "order_id": order_id,
+            "customer_id": customer_id,
+            "items": cart_items,
+            "status": "pending"
+        }
+        self.orders.append(new_order)
+        self.save_orders()
+        return new_order
+
+    def get_all_orders(self):
+        """ Barcha buyurtmalar """
+        return self.orders
+
+    def get_orders_by_customer(self, customer_id):
+        """ Mijoz boyicha buyurtmalar """
+        return [o for o in self.orders if o["customer_id"] == customer_id]
+
+    def update_order_status(self, order_id, status):
+        """
+        Buyurtma statusini yangilash
+        status: pending / confirmed / shipped / delivered
+        """
+        for order in self.orders:
+            if order["order_id"] == order_id:
+                order["status"] = status
+                self.save_orders()
+                return order
+        return None
+
